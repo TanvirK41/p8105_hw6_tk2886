@@ -83,11 +83,22 @@ There is *no missing values* in this data set.
 n_row = birthwgt_df %>% nrow()
 n_col = birthwgt_df %>% ncol()
 ```
-There is *`r n_row`* rows and *`r n_col`* columns. 
+There is *`r n_row`* rows and *`r n_col`* columns in this birthweight dataset. 
 
 
+# My Proposed Regression Model
+```{r}
+birthweight_model <- lm(bwt ~ fincome + mrace + ppbmi + smoken + momage + bhead + blength, data = birthwgt_df)
+```
 
+```{r}
+#obtaining a quick summary of the model and for cleaning up the coefficient table using broom
 
+birthweight_model %>%
+  broom::tidy() %>%
+  select(term, estimate, p.value) %>% 
+  knitr::kable(digits = 6)
+```
 
 
 
