@@ -1,0 +1,20 @@
+---
+title: "p8105_hw6_tk2886"
+output: github_document
+---
+
+
+```{r}
+# Libraries 
+library(tidyverse)
+library(modelr)
+```
+
+
+```{r}
+#Loading Data and cleaning the data
+birthwgt_df <- 
+  read_csv("./data/birthweight.csv") %>%
+  janitor::clean_names()
+```
+
