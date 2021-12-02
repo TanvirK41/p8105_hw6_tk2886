@@ -91,6 +91,8 @@ There is *`r n_row`* rows and *`r n_col`* columns in this birthweight dataset.
 birthweight_model <- lm(bwt ~ fincome + mrace + ppbmi + smoken + momage + bhead + blength, data = birthwgt_df)
 ```
 
+
+
 ```{r}
 #obtaining a quick summary of the model and for cleaning up the coefficient table using broom
 
@@ -99,6 +101,33 @@ birthweight_model %>%
   select(term, estimate, p.value) %>% 
   knitr::kable(digits = 6)
 ```
+
+*Analysis:*
+
+1. **Intercept Estimate** Does not make sense because intercept is meaningful interpretation if it is reasonable that both X1 and X2 and etc can be zero. Mother's pre-pregnancy BMI can not be zero or bhead can not be 0 or blenght can not be 0 either. 
+
+2. **fincome - (Family Monthly Income in Hundreds)** The slope in term in our model is saying that for every 100 hundred dollar increase in the family monthly income, the baby birth weight goes by up 0.42. 
+
+3. **mraceBlack** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 134.73 less for Mother Race: Black. 
+
+4. **mraceAsian** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 73.87 less for Mother Race: Asian.
+
+5. **mracePuerto Rican** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 135.33 less for Mother Race: Puerto Rican.
+
+6. **mraceOther** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 41.23 less for Mother Race: Other.
+
+7. **ppbmi - Mother's pre-pregnancy BMI** The slope in term in our model is saying that for every 1 increase in the ppbmi, the baby birth weight goes by up 5.31. 
+
+8. **smoken - average number of cigarettes smoked per day during pregnancy** The slope in term in our model is saying that for every 1 increase in smoking per day, the baby birth weight down by up 4.06. 
+
+9. **momage - Mother's age at delivery (years)** The slope in term in our model is saying that for every 1 increase in age year for mother, the baby birth weight goes up by 0.66. 
+
+10. **bhead: Baby's head circumference at birth (centimeters)** The slope in term in our model is saying that for every 1 increase in centimeters for baby's head circumference at birth, the baby's birth weight goes up by 138.73. 
+
+11. **blenght: Baby's length at birth (circumference)** The slope in term in our model is saying that for every 1 increase in centimeters for baby's length at birth, the baby's birth goes up by 81.55. 
+
+
+
 
 
 # Plot of my model residuals against fitted values 
