@@ -1,5 +1,6 @@
 ---
 title: "p8105_hw6_tk2886"
+author: "Tanvir Khan"
 output: github_document
 ---
 
@@ -77,6 +78,12 @@ birthwgt_df %>%
 There is *no missing values* in this data set. 
 
 
+```{r}
+# Check how many observation are in this data
+n_row = birthwgt_df %>% nrow()
+n_col = birthwgt_df %>% ncol()
+```
+There is *`r n_row`* rows and *`r n_col`* columns. 
 
 
 
