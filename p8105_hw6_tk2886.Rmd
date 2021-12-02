@@ -8,6 +8,23 @@ output: github_document
 # Libraries 
 library(tidyverse)
 library(modelr)
+
+## Set Global Options 
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6, 
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
@@ -17,4 +34,40 @@ birthwgt_df <-
   read_csv("./data/birthweight.csv") %>%
   janitor::clean_names()
 ```
+
+
+
+
+```{r}
+#Converted numeric to factor whereever it is appropiate
+birthwgt_df <-
+  birthwgt_df %>%
+  mutate(babysex = recode(babysex,
+                          '1' = 'male',
+                          '2' = 'female'),
+         babysex = factor(babysex, levels = c('male', 'female')),
+         frace = recode(frace,
+                        '1' = 'White',
+                        '2' = 'Black',
+                        '3' = 'Asian',
+                        '4' = 'Puerto Rican',
+                        '8' = 'Other',
+                        '9' = 'Unknown'), 
+         frace = factor(frace, levels = c('White', 'Black', 'Asian', 'Puerto Rican', 'Other')),
+         malform = recode(malform,
+                          '0' = 'absent',
+                          '1' = 'present'),
+         malform = factor(malform, levels = c('absent', 'present')), 
+         mrace = recode(mrace,
+                        '1' = 'White',
+                        '2' = 'Black',
+                        '3' = 'Asian',
+                        '4' = 'Puerto Rican',
+                        '8' = 'Other'), 
+         mrace = factor(mrace, levels = c('White', 'Black', 'Asian', 'Puerto Rican', 'Other')))
+```
+
+
+
+
 
