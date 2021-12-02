@@ -69,5 +69,12 @@ birthwgt_df <-
 
 
 
+```{r}
+# Check for missing data 
+birthwgt_df %>% 
+  summarise(across(everything(), ~ sum(is.na(.))))
+```
+There is *no missing values* in this data set. 
+
 
 
