@@ -36,10 +36,8 @@ birthwgt_df <-
 ```
 
 
-
-
 ```{r}
-#Converted numeric to factor whereever it is appropiate
+#Converted numeric to factor where ever it is appropriate
 birthwgt_df <-
   birthwgt_df %>%
   mutate(babysex = recode(babysex,
@@ -66,7 +64,7 @@ birthwgt_df <-
                         '8' = 'Other'), 
          mrace = factor(mrace, levels = c('White', 'Black', 'Asian', 'Puerto Rican', 'Other')))
 ```
-
+*Based on the assignment guidelines:* babysex, frace, malform, and mrace are the four categorical variables in this dataset in which I believed should be converted to factor because type because it has been indicated in R website that Factor in R is a variable that is used to categorize and store the data, having a limited number of different values. In our case, babysex, frace, malform and mrace have limited number of different values and we may convert to Factor type. 
 
 
 ```{r}
@@ -75,6 +73,9 @@ birthwgt_df %>%
   summarise(across(everything(), ~ sum(is.na(.))))
 ```
 There is *no missing values* in this data set. 
+
+
+
 
 
 
