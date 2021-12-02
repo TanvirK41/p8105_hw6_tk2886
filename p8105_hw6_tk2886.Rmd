@@ -28,6 +28,8 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
+# PROBLEM 1 
+
 ```{r}
 #Loading Data and cleaning the data
 birthwgt_df <- 
@@ -73,6 +75,9 @@ birthwgt_df %>%
   summarise(across(everything(), ~ sum(is.na(.))))
 ```
 There is *no missing values* in this data set. 
+
+
+
 
 
 
