@@ -9,6 +9,7 @@ output: github_document
 # Libraries 
 library(tidyverse)
 library(modelr)
+library(rstatix)
 
 ## Set Global Options 
 knitr::opts_chunk$set(
@@ -31,6 +32,8 @@ scale_fill_discrete = scale_fill_viridis_d
 
 # PROBLEM 1 
 
+
+#### Loading the data and cleaning the data. 
 ```{r}
 #Loading Data and cleaning the data
 birthwgt_df <- 
@@ -39,6 +42,35 @@ birthwgt_df <-
 ```
 
 
+
+#### Using the raw data to create a Correlation matrix to see the correlation between predictor and outcome variable. 
+```{r}
+birthwgt_df %>% 
+  cor_mat() %>% 
+  cor_gather() %>% 
+  filter(var1 %in% c("bwt")) %>% 
+  filter(!var2 %in% c("bwt")) %>% 
+  mutate(
+    sig_p = ifelse(p < 0.01, T, F),
+    p_if_sig = ifelse(p < 0.01, p, NA),
+    r_if_sig = ifelse(p < 0.01, cor, NA)
+  ) %>% 
+  ggplot(aes(
+    x = var1, 
+    y = var2, 
+    fill = cor,
+    label = round(r_if_sig, 2))) + 
+  geom_tile(color = "white") +  
+  scale_x_discrete() + 
+  geom_text(
+    color = "white",
+    size = 4
+  )
+```
+
+
+
+#### Converting numeric to factor (babysex, frace, malform, mrace)
 ```{r}
 #Converted numeric to factor where ever it is appropriate
 birthwgt_df <-
@@ -70,6 +102,8 @@ birthwgt_df <-
 *Based on the assignment guidelines:* babysex, frace, malform, and mrace are the four categorical variables in this dataset in which I believed should be converted to factor because type because it has been indicated in R website that Factor in R is a variable that is used to categorize and store the data, having a limited number of different values. In our case, babysex, frace, malform and mrace have limited number of different values and we may convert to Factor type. 
 
 
+
+#### Checking if there is missing value - no missing values 
 ```{r}
 # Check for missing data 
 birthwgt_df %>% 
@@ -78,12 +112,13 @@ birthwgt_df %>%
 There is *no missing values* in this data set. 
 
 
+#### Gathering basic information about the cleaned data (rows and columns)
 ```{r}
 # Check how many observation are in this data
 n_row = birthwgt_df %>% nrow()
 n_col = birthwgt_df %>% ncol()
 ```
-There is *`r n_row`* rows and *`r n_col`* columns in this birthweight dataset. 
+There is *`r n_row`* rows and *`r n_col`* columns in this birth weight dataset. 
 
 
 # My Proposed Regression Model
@@ -91,7 +126,7 @@ There is *`r n_row`* rows and *`r n_col`* columns in this birthweight dataset.
 birthweight_model <- lm(bwt ~ fincome + mrace + ppbmi + smoken + momage + bhead + blength, data = birthwgt_df)
 ```
 
-
+#center it 
 
 ```{r}
 #obtaining a quick summary of the model and for cleaning up the coefficient table using broom
@@ -104,7 +139,7 @@ birthweight_model %>%
 
 *Analysis:*
 
-1. **Intercept Estimate** Does not make sense because intercept is meaningful interpretation if it is reasonable that both X1 and X2 and etc can be zero. Mother's pre-pregnancy BMI can not be zero or bhead can not be 0 or blenght can not be 0 either. 
+1. **Intercept Estimate** Does not make sense because intercept is meaningful interpretation if it is reasonable that X1 and X2 and etc can be zero. Mother's pre-pregnancy BMI can not be zero or bhead can not be 0 or blenght can not be 0 either. 
 
 2. **fincome - (Family Monthly Income in Hundreds)** The slope in term in our model is saying that for every 100 hundred dollar increase in the family monthly income, the baby birth weight goes by up 0.42. 
 
@@ -112,7 +147,7 @@ birthweight_model %>%
 
 4. **mraceAsian** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 73.87 less for Mother Race: Asian.
 
-5. **mracePuerto Rican** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 135.33 less for Mother Race: Puerto Rican.
+5. **mracePuerto Rican** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 135.33 less for Mother Race: Puerto Rican keep other variables constant.
 
 6. **mraceOther** This is a categorical variable. Compared to Mother Race: White, we would expect baby birthweight on average to be 41.23 less for Mother Race: Other.
 
@@ -144,13 +179,51 @@ birthwgt_df %>%
 
 
 
-# Compare my model to two others:
+# Compare my model to two others (The predictors were specified in the assignment guideline (pdf):
 ```{r}
 model_1 <- lm(bwt ~ blength + gaweeks, 
-              data = birthweight)
-
-model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, 
               data = birthwgt_df)
+
+model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex +  + bhead*blength*babysex, data = birthwgt_df)
 ```
 
+
+
+```{r}
+cv_df <-
+  crossv_mc(birthwgt_df, 100) %>% 
+  mutate(
+    birthweight_model = map(train, ~lm(bwt ~ fincome + mrace + ppbmi + smoken + momage + bhead + blength, data = .x)),
+    model_1 = map(train, ~lm(bwt ~ blength + gaweeks, data = .x)),
+    model_2 = map(train, ~lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead* babysex + blength*babysex + bhead * blength * babysex, data = .x))) %>% 
+  mutate(
+    rmse_birthweight = map2_dbl(birthweight_model, test,  ~rmse(model = .x, data = .y)),
+    rmse_mod1 = map2_dbl(model_1, test, ~rmse(model = .x, data = .y)),
+    rmse_mod2 = map2_dbl(model_2, test, ~rmse(model = .x, data = .y)))
+```
+
+
+```{r}
+cv_df %>% 
+  select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = 
+           fct_inorder(model)) %>% 
+  ggplot(aes(x = model, 
+             y = rmse)) + 
+  geom_violin()
+```
+
+
+
+# PROBLEM 2
+
+```{r}
+birthwgt_df %>%
+  filter(frace == "Other")
+```
 
