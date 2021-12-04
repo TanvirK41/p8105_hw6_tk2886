@@ -123,7 +123,7 @@ There is *`r n_row`* rows and *`r n_col`* columns in this birth weight dataset.
 
 # My Proposed Regression Model
 ```{r}
-birthweight_model <- lm(bwt ~ fincome + mrace + smoken + momage + mheight + bhead + blength, data = birthwgt_df)
+birthweight_model <- lm(bwt ~ fincome + mrace + smoken + momage + mheight + bhead + blength + mheight * delwt * momage,  data = birthwgt_df)
 ```
 
 
@@ -216,7 +216,7 @@ cv_df %>%
 
 #### Code provided by professor
 
-```{r}
+```{r message = FALSE}
 weather_df = 
   rnoaa::meteo_pull_monitors(
     c("USW00094728"),
@@ -229,4 +229,20 @@ weather_df =
     tmax = tmax / 10) %>%
   select(name, id, everything())
 ```
+
+```{r}
+#  Do analysis of this original data that was provided 
+
+weather_nrow <- weather_df %>%
+  nrow()
+
+weather_col <- weather_df %>%
+  ncol()
+```
+
+The weather data set for this problem has `r weather_row` rows. 
+
+The weather data set for this problem has `r weather_col` columns. 
+
+
 
