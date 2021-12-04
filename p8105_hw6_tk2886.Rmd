@@ -30,7 +30,9 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
+
 # PROBLEM 1 
+
 
 
 #### Loading the data and cleaning the data. 
@@ -75,6 +77,7 @@ birthwgt_df %>%
 I will be using this correlation matrix to determine which specific predictors I will be using in my regression model. 
 
 
+
 #### Converting numeric to factor (babysex, frace, malform, mrace)
 ```{r}
 #Converted numeric to factor where ever it is appropriate
@@ -117,6 +120,7 @@ birthwgt_df %>%
 There is **no missing values** in this data set. 
 
 
+
 #### Gathering basic information about the cleaned data (rows and columns)
 ```{r}
 # Check how many observation are in this data
@@ -125,6 +129,8 @@ n_col = birthwgt_df %>% ncol()
 ```
 There is *`r n_row`* rows and *`r n_col`* columns in this birth weight dataset. 
 There are *`r n_row`* observations in this dataset. 
+
+
 
 # My Proposed Regression Model
 ```{r}
@@ -201,6 +207,7 @@ cv_df <-
 ```
 
 
+
 ```{r}
 cv_df %>% 
   select(starts_with("rmse")) %>% 
@@ -215,8 +222,8 @@ cv_df %>%
              y = rmse)) + 
   geom_boxplot() +
   labs(
-    title = "Model and Root Mean Square Error",
-    x = "Model",
+    title = "Models and Root Mean Square Error",
+    x = "Models",
     y = "RMSE (root mean square error)"
   )
 ```
@@ -243,6 +250,8 @@ weather_df =
   select(name, id, everything())
 ```
 
+
+
 ```{r}
 #  Do analysis of this original data that was provided 
 
@@ -258,10 +267,12 @@ The weather data set for this problem has `r weather_nrow` rows.
 The weather data set for this problem has `r weather_col` columns. 
 
 
+
 ```{r}
 boot_sample = function(df) {
   sample_frac(df, replace = TRUE)}
 ```
+
 
 
 ```{r}
@@ -271,6 +282,7 @@ boot_sample(weather_df) %>%
   geom_point(alpha = .5) +
   stat_smooth(method = "lm")
 ```
+
 
 
 ```{r}
@@ -298,6 +310,7 @@ information_weather <-
 ```
 
 
+
 ```{r}
 #Plot 
 information_weather %>% 
@@ -310,7 +323,8 @@ information_weather %>%
   )
 ```
 
-**Interpretation: ** The distribution is somewhat normally distributed. The r-squared values in this case peaks around .915
+**Interpretation: ** This plot shows shows the frequency of the r-squared values for the 5000 bootstrap samples. The distribution is somewhat normally distributed. The r-squared values in this case peaks around .915
+
 
 
 ```{r}
@@ -347,6 +361,7 @@ log_weather_information <-
 ```
 
 
+
 ```{r}
 #plot 
 log_weather_plot <- 
@@ -360,7 +375,7 @@ log_weather_plot <-
   )
 ```
 
-*Interpretation:* The distribution is somewhat normally distributed. 
+*Interpretation:* The distribution is somewhat normally distributed. The log of the intersection of estimated coefficients peaks near 2.01. 
 
 
 
