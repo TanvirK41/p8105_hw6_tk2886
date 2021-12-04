@@ -222,6 +222,9 @@ cv_df %>%
 ```
 **Best Model:** In my opinion, the best model is the model that I created because it produces the lowest root mean square error compared to model 1 and model 2. 
 
+
+
+
 # PROBLEM 2
 
 #### Code provided by professor
@@ -299,9 +302,15 @@ information_weather <-
 #Plot 
 information_weather %>% 
   ggplot(aes(x = r_squared)) + 
-  geom_density() 
+  geom_density() +
+  labs(
+    title = "Distribution of the Estimates (R-squared)",
+    x = "R-Squared",
+    y = "Density"
+  )
 ```
 
+**Interpretation: ** The distribution is somewhat normally distributed. The r-squared values in this case peaks around .915
 
 
 ```{r}
@@ -311,6 +320,11 @@ information_weather %>%
   quantile(., probs = 
              c(0.025, 0.975), na.rm = TRUE)
 ```
+
+The **95% confidence interval** for the *r-squared value* is (0.89, 0.92).
+
+
+
 
 
 ```{r}
@@ -338,8 +352,15 @@ log_weather_information <-
 log_weather_plot <- 
   log_weather_information %>% 
   ggplot(aes(x = log_calculations)) + 
-  geom_density()
+  geom_density() +
+    labs(
+    title = "Distribution of the Estimates",
+    x = "Log calculations",
+    y = "Density"
+  )
 ```
+
+*Interpretation:* The distribution is somewhat normally distributed. 
 
 
 
@@ -350,4 +371,5 @@ log_weather_information %>%
   quantile(., probs = 
              c(0.025, 0.975), na.rm = TRUE)
 ```
-The 95% confidence interval is 
+
+The **95% confidence interval** for the *log of the product* of the betas is (1.96, 2.05).
