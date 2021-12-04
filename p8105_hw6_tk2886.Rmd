@@ -43,6 +43,13 @@ birthwgt_df <-
   janitor::clean_names()
 ```
 
+#### Checking if there is missing value - no missing values 
+```{r}
+# Check for missing data 
+skimr::skim(birthwgt_df)
+```
+
+There is **no missing values** in this data set. 
 
 
 #### Using the raw data to create a Correlation matrix to see the correlation between predictor and outcome variable. 
@@ -110,25 +117,17 @@ birthwgt_df <-
 *Based on the assignment guidelines:* babysex, frace, malform, and mrace are the four categorical variables in this dataset in which I believe should be converted to factor because type because it has been indicated in R guidline website that Factor in R is a variable that is used to categorize and store the data, having a limited number of different values. In our case, babysex, frace, malform and mrace have limited number of different values and we may convert to Factor type. 
 
 
-
-#### Checking if there is missing value - no missing values 
-```{r}
-# Check for missing data 
-birthwgt_df %>% 
-  summarise(across(everything(), ~ sum(is.na(.))))
-```
-There is **no missing values** in this data set. 
-
-
-
 #### Gathering basic information about the cleaned data (rows and columns)
 ```{r}
 # Check how many observation are in this data
 n_row = birthwgt_df %>% nrow()
 n_col = birthwgt_df %>% ncol()
+key_var = birthwgt_df %>% names()
 ```
+
 There is *`r n_row`* rows and *`r n_col`* columns in this birth weight dataset. 
 There are *`r n_row`* observations in this dataset. 
+The key variables in this birthweight dataset are: **`r key_var`**. 
 
 
 
