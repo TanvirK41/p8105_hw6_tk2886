@@ -135,7 +135,7 @@ birthweight_model %>%
   knitr::kable(digits = 6)
 ```
 
-*Analysis:*
+*Analysis Practice:*
 
 1. **Intercept Estimate** Does not make sense because intercept is meaningful interpretation if it is reasonable that X1 and X2 and etc can be zero. Mother's pre-pregnancy BMI can not be zero or bhead can not be 0 or blenght can not be 0 either. 
 
@@ -164,10 +164,11 @@ birthweight_model %>%
 birthwgt_df %>% 
   add_predictions(birthweight_model) %>% 
   add_residuals(birthweight_model) %>%
-  ggplot(aes(x = bwt, 
+  ggplot(aes(x = pred, 
              y = resid)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth()
+  geom_point( alpha = 0.5) +
+  geom_smooth(method = "lm",
+              se = FALSE)
 ```
 
 
@@ -207,9 +208,8 @@ cv_df %>%
            fct_inorder(model)) %>% 
   ggplot(aes(x = model, 
              y = rmse)) + 
-  geom_violin()
+  geom_boxplot()
 ```
-
 
 
 # PROBLEM 2
@@ -243,6 +243,63 @@ weather_col <- weather_df %>%
 The weather data set for this problem has `r weather_row` rows. 
 
 The weather data set for this problem has `r weather_col` columns. 
+
+
+```{r}
+boot_sample = function(df) {
+  sample_frac(df, replace = TRUE)}
+```
+
+
+```{r}
+#Check to see if this is working.
+boot_sample(weather_df) %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm")
+```
+
+
+```{r}
+# Drawing 5000 bootstrap samples
+boot_straps_information = 
+  data_frame(
+    strap_number = 1:5000,
+    strap_sample = rerun(5000, boot_sample(weather_df))
+  )
+```
+
+
+
+```{r}
+information_weather <- 
+  weather_df %>% 
+  modelr::bootstrap(n = 5000) %>% 
+  mutate(
+    models = map(strap, ~ lm(tmax ~ tmin, data = .x)),
+    results = map(models, broom::glance)) %>% 
+  select(-strap, -models) %>% 
+  unnest(results) %>% 
+  group_by(.id) %>% 
+  summarize(r_squared = unique(r.squared))
+```
+
+
+```{r}
+#Plot 
+information_weather %>% 
+  ggplot(aes(x = r_squared)) + 
+  geom_density() 
+```
+
+
+
+```{r}
+information_weather %>% 
+  pull(r_squared) %>%
+  quantile(., probs = c(0.025, 0.975), na.rm = TRUE)
+```
+
 
 
 
