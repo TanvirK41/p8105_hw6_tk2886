@@ -34,7 +34,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 
 #### Loading the data and cleaning the data. 
-```{r}
+```{r message = FALSE, ECHO = FALSE}
 #Loading Data and cleaning the data
 birthwgt_df <- 
   read_csv("./data/birthweight.csv") %>%
@@ -44,7 +44,7 @@ birthwgt_df <-
 
 
 #### Using the raw data to create a Correlation matrix to see the correlation between predictor and outcome variable. 
-```{r}
+```{r message = FALSE, warning = FALSE}
 birthwgt_df %>% 
   cor_mat() %>% 
   cor_gather() %>% 
@@ -71,7 +71,8 @@ birthwgt_df %>%
     y = "Predictor Variable",
     title = "Correlation Matrix Between Predictors and Outcomes")
 ```
-From this correlation matrix, I will use specific predictors in my regression model. 
+
+I will be using this correlation matrix to determine which specific predictors I will be using in my regression model. 
 
 
 #### Converting numeric to factor (babysex, frace, malform, mrace)
@@ -103,7 +104,7 @@ birthwgt_df <-
                         '8' = 'Other'), 
          mrace = factor(mrace, levels = c('White', 'Black', 'Asian', 'Puerto Rican', 'Other')))
 ```
-*Based on the assignment guidelines:* babysex, frace, malform, and mrace are the four categorical variables in this dataset in which I believed should be converted to factor because type because it has been indicated in R website that Factor in R is a variable that is used to categorize and store the data, having a limited number of different values. In our case, babysex, frace, malform and mrace have limited number of different values and we may convert to Factor type. 
+*Based on the assignment guidelines:* babysex, frace, malform, and mrace are the four categorical variables in this dataset in which I believe should be converted to factor because type because it has been indicated in R guidline website that Factor in R is a variable that is used to categorize and store the data, having a limited number of different values. In our case, babysex, frace, malform and mrace have limited number of different values and we may convert to Factor type. 
 
 
 
@@ -113,7 +114,7 @@ birthwgt_df <-
 birthwgt_df %>% 
   summarise(across(everything(), ~ sum(is.na(.))))
 ```
-There is *no missing values* in this data set. 
+There is **no missing values** in this data set. 
 
 
 #### Gathering basic information about the cleaned data (rows and columns)
@@ -123,13 +124,13 @@ n_row = birthwgt_df %>% nrow()
 n_col = birthwgt_df %>% ncol()
 ```
 There is *`r n_row`* rows and *`r n_col`* columns in this birth weight dataset. 
-There are *` r n_row`* observations in this dataset. 
+There are *`r n_row`* observations in this dataset. 
 
 # My Proposed Regression Model
 ```{r}
 birthweight_model <- lm(bwt ~ wtgain + mheight + gaweeks + delwt + bhead + blength,  data = birthwgt_df)
 ```
-**Explanation of My model:** My modeling process involves using the correlation matrix that I created above and based on the p-value (if it's closer to 1 then the outcome and the predictor has significant correlation) and I selected the predictors that has significant or somewhat significant correlation with the outcome and included those predictors in my model. 
+**Explanation of My model:** My modeling process involves using the correlation matrix that I created above and based on the p-value (if it's closer to 1 then the outcome and the predictor has significant correlation) and I selected the predictors that has significant or somewhat significant correlation with the outcome and included those predictors in my model above. 
 
 
 
@@ -327,4 +328,21 @@ log_weather_information <-
 ```
 
 
+```{r}
+#plot 
+log_weather_plot <- 
+  log_weather_information %>% 
+  ggplot(aes(x = log_calculations)) + 
+  geom_density()
+```
+
+
+
+```{r}
+#confidence interval 
+log_weather_information %>% 
+  pull(log_calculations) %>% 
+  quantile(., probs = 
+             c(0.025, 0.975), na.rm = TRUE)
+```
 
