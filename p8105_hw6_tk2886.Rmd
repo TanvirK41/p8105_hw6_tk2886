@@ -371,8 +371,7 @@ log_weather_information <-
 
 ```{r}
 #plot 
-log_weather_plot <- 
-  log_weather_information %>% 
+log_weather_information %>% 
   ggplot(aes(x = log_calculations)) + 
   geom_density() +
     labs(
