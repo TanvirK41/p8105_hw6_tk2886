@@ -85,7 +85,7 @@ I will be using this correlation matrix to determine which specific predictors I
 
 
 
-#### Converting numeric to factor (babysex, frace, malform, mrace)
+#### Converting numeric to factor for these variables: babysex, frace, malform, mrace
 ```{r}
 #Converted numeric to factor where ever it is appropriate
 birthwgt_df <-
@@ -135,7 +135,7 @@ The key variables in this birthweight dataset are: **`r key_var`**.
 ```{r}
 birthweight_model <- lm(bwt ~ wtgain + mheight + gaweeks + delwt + bhead + blength,  data = birthwgt_df)
 ```
-**Explanation of My model:** My modeling process involves using the correlation matrix that I created above and based on the p-value (if it's closer to 1 then the outcome and the predictor has significant correlation) and I selected the predictors that has significant or somewhat significant correlation with the outcome and included those predictors in my model above. 
+**Explanation of My model:** My modeling process involves using the correlation matrix that I created above and based on the p-value (if it's closer to 1 then the outcome and the predictor has significant correlation) and I selected the predictors that has significant or somewhat significant correlation with the outcome and included those predictors in my model above. Also it is important to know the baby's head size t birth and the baby's length at birth to determine the baby's the weight. 
 
 
 
@@ -189,6 +189,9 @@ model_1 <- lm(bwt ~ blength + gaweeks, data = birthwgt_df)
 
 model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex +  + bhead*blength*babysex, data = birthwgt_df)
 ```
+
+These models were specified in the assignment instruction document. 
+
 
 
 
@@ -259,11 +262,16 @@ weather_nrow <- weather_df %>%
 
 weather_col <- weather_df %>%
   ncol()
+
+key_var_weather <- weather_df %>%
+  names()
 ```
 
 The weather data set for this problem has `r weather_nrow` rows. 
 
 The weather data set for this problem has `r weather_col` columns. 
+
+The key variables in this data set are: **`r key_var_weather`**. 
 
 
 
@@ -274,7 +282,7 @@ boot_sample = function(df) {
 
 
 
-```{r}
+```{r message = FALSE}
 #Check to see if this is working.
 boot_sample(weather_df) %>% 
   ggplot(aes(x = tmin, y = tmax)) + 
@@ -283,8 +291,8 @@ boot_sample(weather_df) %>%
 ```
 
 
-
-```{r}
+#### Drawing 5000 bootstrap samples
+```{r message = FALSE, warning = FALSE}
 # Drawing 5000 bootstrap samples
 boot_straps_information = 
   data_frame(
