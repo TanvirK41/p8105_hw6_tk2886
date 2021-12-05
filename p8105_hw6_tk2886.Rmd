@@ -187,7 +187,7 @@ birthwgt_df %>%
 ```{r}
 model_1 <- lm(bwt ~ blength + gaweeks, data = birthwgt_df)
 
-model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex +  + bhead*blength*babysex, data = birthwgt_df)
+model_2 <- lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead*blength*babysex, data = birthwgt_df)
 ```
 
 These models were specified in the assignment instruction document. 
@@ -201,7 +201,7 @@ cv_df <-
   mutate(
     birthweight_model = map(train, ~lm(bwt ~ wtgain + mheight + gaweeks + delwt + bhead + blength, data = .x)),
     model_1 = map(train, ~lm(bwt ~ blength + gaweeks, data = .x)),
-    model_2 = map(train, ~lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead* babysex + blength*babysex + bhead * blength * babysex, data = .x))) %>% 
+    model_2 = map(train, ~lm(bwt ~ bhead + blength + babysex + bhead*blength + bhead*babysex + blength*babysex + bhead * blength * babysex, data = .x))) %>% 
   mutate(
     rmse_birthweight = map2_dbl(birthweight_model, test,  ~rmse(model = .x, data = .y)),
     rmse_mod1 = map2_dbl(model_1, test, ~rmse(model = .x, data = .y)),
