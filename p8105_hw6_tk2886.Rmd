@@ -282,7 +282,7 @@ boot_sample = function(df) {
 
 
 
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 #Check to see if this is working.
 boot_sample(weather_df) %>% 
   ggplot(aes(x = tmin, y = tmax)) + 
@@ -330,7 +330,7 @@ information_weather %>%
   )
 ```
 
-**Interpretation: ** This plot shows shows the frequency of the r-squared values for the 5000 bootstrap samples. The distribution is somewhat normally distributed. The r-squared values in this case peaks around .915
+**Interpretation:** This plot shows shows the frequency of the r-squared values for the 5000 bootstrap samples. The distribution is somewhat normally distributed. The r-squared values in this case peaks around .915
 
 
 
@@ -382,7 +382,7 @@ log_weather_plot <-
   )
 ```
 
-*Interpretation:* The distribution is somewhat normally distributed. The log of the intersection of estimated coefficients peaks near 2.01. 
+**Interpretation:** The distribution is somewhat normally distributed. The log of the intersection of estimated coefficients peaks near 2.01. 
 
 
 
